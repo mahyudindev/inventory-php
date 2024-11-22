@@ -1,166 +1,91 @@
-<?php
-error_reporting(0);
-session_start();
-include "configuration/config_etc.php" ;
-include "configuration/config_include.php" ;
-include 'configuration/config_connect.php';
-$queryback="SELECT * FROM data";
-    $resultback=mysqli_query($conn,$queryback);
-    $rowback=mysqli_fetch_assoc($resultback);
-    $footer=$rowback['nama'];
-
-$queryback="SELECT * FROM backset";
-    $resultback=mysqli_query($conn,$queryback);
-    $rowback=mysqli_fetch_assoc($resultback);
-    $nama=$rowback['namabisnis1'];
-connect(); timing();
-?>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<html><br>
-<title>Login</title>
-<body style="background: #325d75">
-
-  
-<link rel="stylesheet" type="text/css" href="\dist\css\style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url('hero.png') no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+        .dark-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.6);
+            z-index: -1;
+        }
+        .login-box {
+            margin-top: 100px;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        .login-logo a {
+            font-size: 28px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+        }
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            box-shadow: none;
+        }
+        .btn-primary {
+            background-color: #325d75;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #26495c;
+        }
+    </style>
 </head>
-</html>
-<?php head();
-
-?>
-<body class="hold-transition login-page">
-
-  <center><font color="white"><h1><br></h1></font></center>
-
-
-<?php
-$username=$password="";
-
-
-$tabeldatabase = "user"; // tabel database
-$forward = mysqli_real_escape_string($conn, $tabeldatabase);
-
-if($_SERVER["REQUEST_METHOD"]=="POST"){
-  $username= mysqli_real_escape_string($conn, $_POST['txtuser']);
-  $password= mysqli_real_escape_string($conn, $_POST['txtpass']);
-  $password=md5($password);
-  $password=sha1($password);
-
-  $sql="select * from $forward where userna_me='$username' and pa_ssword='$password'";
-  $hasil= mysqli_query($conn,$sql);
-  if(mysqli_num_rows($hasil)>0){
-    $data=mysqli_fetch_assoc($hasil);
-    $_SESSION['username']=$data['userna_me'];
-    $_SESSION['nama']=$data['nama'];
-    $_SESSION['jabatan']=$data['jabatan'];
-    $_SESSION['avatar']=$data['avatar'];
-    $_SESSION['nouser']=$data['no'];
-    $_SESSION['baseurl']=$baseurl;
-    login_validate();
-    header("Location: index");
-  }else if(mysqli_num_rows($hasil)<=0){
-  $sql1="select * from guru where kode='$username' and password='$password'";
-  $hasil1= mysqli_query($conn,$sql1);
-    $data=mysqli_fetch_assoc($hasil1);
-    $_SESSION['username']=$data['kode'];
-    $_SESSION['nama']=$data['nama'];
-    $_SESSION['jabatan']=$data['jabatan'];
-    $_SESSION['avatar']=$data['avatar'];
-    $_SESSION['nouser']=$data['no'];
-    $_SESSION['baseurl']=$baseurl;
-    login_validate();
-    header("Location: index");
-
-
-  }
-  else {
-    header("Location: loginagain");
-  }
-
-
-}
-
-
-
-
-?>
-
-
-
-
-    <div class="container">
-  <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-
-  <?php error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-  ?>
-
-         <div class="login-box">
-  <div class="login-logo">
-    <a href=""><font color="white"><b><?php echo $footer;?></b><br>Warehouse Edition</a></font>
-  </div>
-  <!-- /.login-logo -->
-  <div class="login-box-body">
-
-    <form action="op.php" method="post">
-      <div class="form-group has-feedback">
-        <input type="txt" class="form-control" name="txtuser" placeholder="Username" maxlength="20" required>
-        <span class="glyphicon glyphicon-user form-control-feedback"></span>
-      </div>
-      <div class="form-group has-feedback">
-        <input type="password" class="form-control" name="txtpass" placeholder="Password" maxlength="20" required>
-        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-      </div>
-      <div class="row">
-        <!-- /.col -->
-        <div class="col-xs-12" align="right">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">Masuk</button>
+<body>
+    <div class="dark-overlay"></div>
+    <div class="container position-relative">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="login-box">
+                    <div class="login-logo text-center mb-4">
+                        <a href="#">MARS DROID</a>
+                    </div>
+                    <?php if (isset($_GET['error']) && $_GET['error'] == 'invalid'): ?>
+                        <div class="alert alert-danger text-center">
+                            Username atau password salah. Silakan coba lagi!
+                        </div>
+                    <?php endif; ?>
+                    <form action="op.php" method="post">
+                        <div class="mb-3">
+                            <label for="txtuser" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="txtuser" name="txtuser" placeholder="Enter username" maxlength="20" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="txtpass" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="txtpass" name="txtpass" placeholder="Enter password" maxlength="20" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Masuk</button>
+                        </div>
+                    </form>
+                    <p class="text-center mt-3 login-box-msg">Management Inventory System</p>
+                </div>
+            </div>
         </div>
-        <!-- /.col -->
-      </div>
-    </form>
-
-    <!-- /.social-auth-links -->
-  <br>
-    <p class="login-box-msg">Copyright © 2023</p>
-
-  </div>
-  <!-- /.login-box-body -->
-</div>
-<!-- /.login-box -->
-        </div>
-
-
-         </div>
     </div>
-
-
-
-
-
-               <script src="dist/plugins/jQuery/jquery-2.2.3.min.js"></script>
-        <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-        <script>
-  $.widget.bridge('uibutton', $.ui.button);
-</script>
-        <script src="dist/bootstrap/js/bootstrap.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-        <script src="dist/plugins/morris/morris.min.js"></script>
-        <script src="dist/plugins/sparkline/jquery.sparkline.min.js"></script>
-        <script src="dist/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
-        <script src="dist/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-        <script src="dist/plugins/knob/jquery.knob.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
-        <script src="dist/plugins/daterangepicker/daterangepicker.js"></script>
-        <script src="dist/plugins/datepicker/bootstrap-datepicker.js"></script>
-        <script src="dist/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
-        <script src="dist/plugins/slimScroll/jquery.slimscroll.min.js"></script>
-        <script src="dist/plugins/fastclick/fastclick.js"></script>
-        <script src="dist/js/app.min.js"></script>
-        <script src="dist/js/pages/dashboard.js"></script>
-        <script src="dist/js/demo.js"></script>
-    <script src="dist/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="dist/plugins/datatables/dataTables.bootstrap.min.js"></script>
-    <script src="dist/plugins/slimScroll/jquery.slimscroll.min.js"></script>
-    <script src="dist/plugins/fastclick/fastclick.js"></script>
-    </body>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
