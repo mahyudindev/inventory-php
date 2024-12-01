@@ -71,17 +71,33 @@ echo $b['keluar']+0;
 
 <?php if($forward == 'barang'){ ?>
       <table class="table">
+        <h6 style="text-align:center;">Laporan Data Barang</h6>
+        <p>Tanggal : <?php echo date('d-m-Y');?></p>
+        <p>Waktu : <?php echo date('H:i');?></p>
+
                                         <thead>
-                                            <tr>
-                                              <th>No</th>
-                                              <th>Kode Barang</th>
-                                              <th>Nama Barang</th>
-                                              <th>Kategori</th>
-                                              <th>Stok Terjual</th>
-                                              <th>Stok Terbeli</th>
-                                              <th>Stok Tersedia</th>
-                                              
-                                            </tr>
+                                        <tr>
+                                            <th style="text-align:center;border-bottom:1px solid #ddd" rowspan="2">Item Code</th>
+                                            <th style="text-align:center;border-bottom:1px solid #ddd" rowspan="2">Short Name</th>
+                                            <th style="text-align:center;border-bottom:1px solid #ddd" rowspan="2">UOM</th>
+                                            <th style="text-align:center;border-bottom:1px solid #ddd" colspan="2">Stock Onhand</th>
+                                            <th style="text-align:center;border-bottom:1px solid #ddd" colspan="2">Stock Available</th>
+                                            <th style="text-align:center;border-bottom:1px solid #ddd" colspan="2">Stock Minimum</th>
+                                            <th style="text-align:center;border-bottom:1px solid #ddd" colspan="2">Stock Maximum</th>
+                                            <th style="text-align:center;border-bottom:1px solid #ddd" colspan="2">Remarks</th>
+                                        </tr>
+                                        <tr>
+                                            <th style="text-align:center;border-bottom:1px solid #ddd">PKG</th>
+                                            <th style="text-align:center;border-bottom:1px solid #ddd">FRC</th>
+                                            <th style="text-align:center;border-bottom:1px solid #ddd">PKG</th>
+                                            <th style="text-align:center;border-bottom:1px solid #ddd">FRC</th>
+                                            <th style="text-align:center;border-bottom:1px solid #ddd">PKG</th>
+                                            <th style="text-align:center;border-bottom:1px solid #ddd">FRC</th>
+                                            <th style="text-align:center;border-bottom:1px solid #ddd">PKG</th>
+                                            <th style="text-align:center;border-bottom:1px solid #ddd">FRC</th>
+                                            <th style="text-align:center;border-bottom:1px solid #ddd">UNDER</th>
+                                            <th style="text-align:center;border-bottom:1px solid #ddd">OVER</th>
+                                        </tr>
                                         </thead>
 										  <?php
 	error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
@@ -92,16 +108,21 @@ echo $b['keluar']+0;
 				while ($fill = mysqli_fetch_assoc( $hasil)){
 					?>
                      <tbody>
-<tr>
-  <td><?php echo ++$no_urut;?></td>
-  <td><?php  echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
-  <td><?php  echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-  <td><?php  echo mysqli_real_escape_string($conn, $fill['kategori']); ?></td>
-  <td><?php  echo mysqli_real_escape_string($conn, $fill['terjual']); ?></td>
-  <td><?php  echo mysqli_real_escape_string($conn, $fill['terbeli']); ?></td>
-  <td><?php  echo mysqli_real_escape_string($conn, $fill['sisa']); ?></td>
-  
-					  </tr><?php
+                     <tr>
+        <td style="text-align:center;"><?php  echo mysqli_real_escape_string($conn, $fill['kode']); ?></td>
+        <td style="text-align:center;"><?php  echo mysqli_real_escape_string($conn, $fill['sku']); ?></td>
+        <td style="text-align:center;"><?php  echo mysqli_real_escape_string($conn, $fill['satuan']); ?></td>
+        <td style="text-align:center;"><?php  echo mysqli_real_escape_string($conn, $fill['sisa']); ?></td>
+        <td style="text-align:center;">0</td>
+        <td style="text-align:center;"><?php  echo mysqli_real_escape_string($conn, $fill['sisa']); ?></td>
+        <td style="text-align:center;">0</td>
+        <td style="text-align:center;"><?php  echo mysqli_real_escape_string($conn, $fill['stokmin']); ?></td>
+        <td style="text-align:center;">0</td>
+        <td style="text-align:center;"><?php  echo mysqli_real_escape_string($conn, $fill['barcode']); ?></td>
+        <td style="text-align:center;">0</td>
+        <td style="text-align:center;"><?php if($fill['sisa']<$fill['stokmin']){echo "<span style='color:red'>" . ($fill['stokmin'] - $fill['sisa']) . "</span>";}?></td>
+        <td style="text-align:center;"><?php if($fill['sisa']>$fill['barcode']){echo "<span style='color:red'>".($fill['sisa']-$fill['baracode'])."</span>";}?></td>
+    </tr><?php
 					;
 				}
 

@@ -101,9 +101,7 @@ if($chmenu5 >= 1 || $_SESSION['jabatan'] == 'admin'){ ?>
                        <a href="surat_kelola"><i class="fa fa-circle-o"></i>Surat Jalan</a>
                     </li>
 
-                    <li>
-                       <a href="stok_sesuaikan"><i class="fa fa-circle-o"></i>Penyesuaian</a>
-                    </li>
+                    
                     
 
                             </ul>
@@ -135,8 +133,11 @@ if($chmenu7 >= 1 || $_SESSION['jabatan'] == 'admin'){ ?>
                       <li>
                         <a href="stok_menipis"><i class="fa fa-circle-o"></i>Stok Menipis</a>
                       </li>
-                       <li>
+                       <!-- <li>
                       <a href="mutasi"><i class="fa fa-circle-o"></i>Mutasi</a>
+                    </li> -->
+                    <li>
+                       <a href="stok_sesuaikan"><i class="fa fa-circle-o"></i>Penyesuaian</a>
                     </li>
                    
                 </ul>
@@ -151,7 +152,7 @@ if($chmenu7 >= 1 || $_SESSION['jabatan'] == 'admin'){ ?>
                             <a href="#"> <i class="glyphicon glyphicon-folder-close"></i> <span>Laporan</span> <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i> </span> </a>
                <ul class="treeview-menu">
                                 <li>
-                                    <a href="laporan_stok"><i class="fa fa-circle-o"></i>Stok</a>
+                                    <a href="laporan_stok_barang"><i class="fa fa-circle-o"></i>Stok</a>
                                 </li>
                                                     <li>
                                     <a href="laporan_penyesuaian"><i class="fa fa-circle-o"></i>Daftar Penyesuaian</a>

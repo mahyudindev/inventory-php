@@ -105,13 +105,6 @@ if ($chmod >= 2 || $_SESSION['jabatan'] == 'admin') {
         <div class="box-body">
             <p>
                 <a href="add_barang" class='btn btn-success btn-sm' ><i class='fa fa-pencil-square-o'></i> Tambah</a>
-
-            <a <?php if($mode>=1){ echo 'href="impor_mode"'; } else { echo 'href="impor"';}?> class="btn btn-primary btn-sm" id="import"
-                   ><i class='fa fa-upload'></i> Import Data</a>
-
-                <a href="barang" class="btn btn-default btn-sm" id="refresh"><i class='fa fa-refresh'></i> Refresh</a>
-                <a href="barang?limit=true" class="btn btn-warning btn-sm" id="stokLimit"><i class='fa fa-refresh'></i> Stok Limit</a>
-                <a href="barang?exp=true" class="btn btn-warning btn-sm" id="stokExpired"><i class='fa fa-refresh'></i> Expired</a>
             </p>
             <table class="table table-bordered table-hover" id="example2" width="100%" cellspacing="0">
 
@@ -124,7 +117,7 @@ if ($chmod >= 2 || $_SESSION['jabatan'] == 'admin') {
 
                 <thead>
                     <tr>
-                        <th style="width:70px">Action</th>
+                    <th>ID</th>
                         <th>SKU</th>
                         <th style="width:200px">
                             Nama&nbsp;Barang&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -139,12 +132,13 @@ if ($chmod >= 2 || $_SESSION['jabatan'] == 'admin') {
                 
                         <th>Satuan</th>
                         <th>Kategori</th>
-                        <th>Lokasi</th>
+                        <!-- <th>Lokasi</th>
                         <th>Warna</th>
-                        <th>Ukuran</th>
+                        <th>Ukuran</th> -->
                         <th>Merek</th>
-                        <th>Expired</th>
-                        <th>ID</th>
+                        <!-- <th>Expired</th> -->
+                        <th style="width:70px">Action</th>
+                        
                     </tr>
                 </thead>
                 <tbody>
@@ -164,23 +158,12 @@ if ($chmod >= 2 || $_SESSION['jabatan'] == 'admin') {
                     while($fill=mysqli_fetch_assoc($sql)){
 
                         echo '<tr>';
-                         echo '<td>';?>
+                        ?>
 
                          
-            <?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') { ?>
-          <button type="button" class="btn btn-success btn-xs" onclick="window.location.href='add_<?php echo $halaman;?>?q=<?php  echo $fill['no']; ?>'"><i class='fa fa-edit'></i></button>
-           <?php } else {}?>
-
-           <?php  if ($chmod >= 4 || $_SESSION['jabatan'] == 'admin') { ?>
-          <button type="button" class="btn btn-danger btn-xs" onclick="window.location.href='component/delete/delete_master?no=<?php echo $fill['no'].'&'; ?>forward=<?php echo $forward.'&';?>forwardpage=<?php echo $forwardpage.'&'; ?>chmod=<?php echo $chmod; ?>'"><i class='fa fa-trash'></i></button>
-           <?php } else {}?>
-
-           <?php  if ($chmod >= 4 || $_SESSION['jabatan'] == 'admin') { ?>
-          <button type="button" class="btn btn-info btn-xs" onclick="window.location.href='barang_detail?no=<?php echo $fill['no']?>'"><i class='fa fa-eye'></i></button>
-           <?php } else {}?>
               
 
-                   <?php    echo  '</td>';
+                   <?php echo '<td>'.$fill['kode'].'</td>';
                         echo '<td>'.$fill['sku'].'</td>';
                         echo '<td>'.$fill['nama'].'</td>';
                         if($mode>=1){
@@ -191,25 +174,27 @@ if ($chmod >= 2 || $_SESSION['jabatan'] == 'admin') {
                          echo '<td>'.number_format($fill['stokmin']).'</td>';
 
                        }
-
-                       
-                              echo '<td>'.$fill['satuan'].'</td>';
-                              echo '<td>'.$fill['kategori'].'</td>';
-                              echo '<td>'.$fill['lokasi'].'</td>';
-                              echo '<td>'.$fill['warna'].'</td>';
-                              echo '<td>'.$fill['ukuran'].'</td>';
-                              echo '<td>'.$fill['brand'].'</td>';
-                              if($fill['expired']!='0000-00-00'){
-                              echo '<td>'.$fill['expired'].'</td>';
-                            } else {
-                              echo '<td></td>';
-                            }
-                              echo '<td>'.$fill['kode'].'</td>';
-                            
-                        echo '</tr>';
-
-
-                    }?>
+                       echo '<td>' . $fill['satuan'] . '</td>'; // Kolom Satuan
+                       echo '<td>' . $fill['kategori'] . '</td>'; // Kolom Kategori
+                      //  echo '<td>' . $fill['lokasi'] . '</td>'; // Kolom Lokasi
+                      //  echo '<td>' . $fill['warna'] . '</td>'; // Kolom Warna
+                      //  echo '<td>' . $fill['ukuran'] . '</td>'; // Kolom Ukuran
+                       echo '<td>' . $fill['brand'] . '</td>'; // Kolom Merek
+                      //  echo '<td>' . ($fill['expired'] != '0000-00-00' ? $fill['expired'] : '') . '</td>'; // Kolom Expired
+                       echo '<td>'; // Kolom Action
+                       if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') {
+                           echo '<button style="margin-right: 5px;" type="button" class="btn btn-success btn-xs " onclick="window.location.href=\'add_' . $halaman . '?q=' . $fill['no'] . '\'"><i class="fa fa-edit"></i></button>';
+                       }
+                       if ($chmod >= 4 || $_SESSION['jabatan'] == 'admin') {
+                           echo '<button style="margin-right: 5px;" type="button" class="btn btn-danger btn-xs" onclick="window.location.href=\'component/delete/delete_master?no=' . $fill['no'] . '&forward=' . $forward . '&forwardpage=' . $forwardpage . '&chmod=' . $chmod . '\'"><i class="fa fa-trash"></i></button>';
+                       }
+                      //  if ($chmod >= 4 || $_SESSION['jabatan'] == 'admin') {
+                      //      echo '<button style="margin-right: 5px;" type="button" class="btn btn-info btn-xs" onclick="window.location.href=\'barang_detail?no=' . $fill['no'] . '\'"><i class="fa fa-eye"></i></button>';
+                      //  }
+                       echo '</td>';
+                       echo '</tr>';
+                   }
+                   ?>
 
                 </tbody>
             </table>

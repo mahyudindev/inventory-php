@@ -282,10 +282,10 @@ if ($chmod >= 1 || $_SESSION['jabatan'] == 'admin') {
                             </div>
 
               <?php } else {} ?>
-              <!-- <div align="right"  style="padding-right:15px"  class="no-print" id="no-print" >
+              <div align="right"  style="padding-right:15px"  class="no-print" id="no-print" >
              <div align="left" class="no-print" id="no-print"> <a onclick="javascript:printDiv('tabel1');" class="btn btn-default btn-flat" name="cetak" value="cetak"><span class="glyphicon glyphicon-print"></span></a><?php echo " "; ?>
                <a onclick="window.location.href='configuration/config_export?forward=<?php echo $forward; ?>&search=<?php echo $search; ?>'" class="btn btn-default btn-flat" name="cetak" value="export excel"><span class="glyphicon glyphicon-save-file"></span></a></div> <br/>
-             </div> -->
+             </div>
                         </div>
                         <!-- ./col -->
                     </div>

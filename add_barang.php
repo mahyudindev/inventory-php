@@ -164,7 +164,7 @@ if( isset($id) && $id!='' ){
                         <li class="active"><a href="#tab_1" data-toggle="tab">Standard</a></li>
                         <li style="display:none"><a href="#tab_2" data-toggle="tab">Harga</a></li>
                         <li style="display:none"><a href="#tab_3" data-toggle="tab">Stok</a></li>
-                        <li><a href="#tab_4" data-toggle="tab">Advanced</a></li>
+                        <!-- <li><a href="#tab_4" data-toggle="tab">Advanced</a></li> -->
 
                     </ul>
                     <div class="tab-content">
@@ -198,6 +198,11 @@ error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
                                             <td>Nama Barang</td>
                                             <td>:</td>
           <td><input class="form-control" name="nama" maxlength="200" autocomplete="off" value="<?php echo $w['nama'];?>"> </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Singkatan Kode</td>
+                                            <td>:</td>
+          <td><input class="form-control" name="keterangan" maxlength="200" autocomplete="off" value="<?php echo $w['keterangan'];?>"> </td>
                                         </tr>
 
 
@@ -297,31 +302,26 @@ error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
                                             </td>
                                         </tr>
 
-                                         <!-- <tr>
-                                            <td>Barcode</td>
-                                            <td>:</td>
-                                            <td><input class="form-control" name="barcode" value="<?php echo $w['barcode'];?>" required> </td>
-                                        </tr> -->
-
                                         <?php } else {?>
 
                                         <tr>
                                             <td>Stok Sekarang</td>
                                             <td>:</td>
-                                            <td><input class="form-control" name="stok" type="number" min="1" required> </td>
+                                            <td><input class="form-control" name="stok" type="number" required> </td>
                                         </tr>
                                      
                                         <tr>
                                             <td>Stok Minimal</td>
                                             <td>:</td>
-                                            <td><input class="form-control" name="stok_minimal" type="number" min="1" value="1" required>
+                                            <td><input class="form-control" name="stok_minimal" type="number"required>
                                             </td>
                                         </tr>
-                                        <!-- <tr>
-                                            <td>Barcode</td>
+                                        <tr>
+                                            <td>Stok Maksimal</td>
                                             <td>:</td>
-                                            <td><input class="form-control" name="barcode" value="BRG<?php echo autoNumber();?>" required> </td>
-                                        </tr> -->
+                                            <td><input class="form-control" name="barcode" type="number"  required>
+                                            </td>
+                                        </tr>
                                      <?php } ?>
                          
                 <?php
