@@ -213,14 +213,14 @@ if($chmenu1 >= 1 || $_SESSION['jabatan'] == 'admin'){ ?>
 if($chmenu10 >= 1 || $_SESSION['jabatan'] == 'admin'){ ?>
 
 
-              <li class="treeview">
+              <!-- <li class="treeview">
                             <a href=""> <i class="glyphicon glyphicon-cog"></i> <span>Pengaturan</span> <span class="pull-right-container"> </span> </a>
                                <ul class="treeview-menu">
                                 <li>
                                     <a href="set_general"><i class="fa fa-circle-o"></i>General Setting</a>
                                 </li>
                 <li>
-                <!-- <a href="set_themes"><i class="fa fa-circle-o"></i>Theme Setting</a> -->
+             
                                </li>
 
                                
@@ -231,7 +231,7 @@ if($chmenu10 >= 1 || $_SESSION['jabatan'] == 'admin'){ ?>
                                                                    </li>
 
                             </ul>
-                        </li>
+                        </li> -->
 <?php }else{} 
  ?>
 

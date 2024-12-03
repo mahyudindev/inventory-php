@@ -101,7 +101,7 @@ if ($chmod >= 2 || $_SESSION['jabatan'] == 'admin') {
   ?>
 
 <div class="row">
-  <div class="col-md-6">
+  <div class="col-md-12">
      <?php
     error_reporting(E_ALL ^ E_DEPRECATED);
     $sql    = "select * from barang where sisa <= stokmin order by kode";
@@ -124,18 +124,19 @@ if ($chmod >= 2 || $_SESSION['jabatan'] == 'admin') {
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table class="table table-bordered">
-                <thead>
-                <tr>
-                  <th style="width: 10px">#</th>
-                  <th>Kode</th>
-                  <th>Barang</th>
-                  <th style="width: 40px">Stok</th>
-                  <?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') { ?>
-                                                <th>Opsi</th>
-                                                <?php }else{} ?>
-                </tr>
-                </thead>
+              <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th style="width: 5%">#</th>
+                      <th style="width: 15%">Kode</th>
+                      <th style="width: 40%">Barang</th>
+                      <th style="width: 15%">Stok</th>
+                      <?php if ($chmod >= 3 || $_SESSION['jabatan'] == 'admin') { ?>
+                      <th style="width: 25%">Opsi</th>
+                      <?php }else{} ?>
+                    </tr>
+                  </thead>
 
 
 <?php
