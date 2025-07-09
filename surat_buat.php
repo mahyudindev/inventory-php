@@ -46,8 +46,12 @@ $insert = $_POST['insert'];
 
 $nota=$_GET['q'];
  
-$sql=mysqli_query($conn, "SELECT keterangan FROM stok_keluar WHERE nota='$nota'");
-$ai=mysqli_fetch_assoc($sql);
+$stmt = $conn->prepare("SELECT keterangan FROM stok_keluar WHERE nota=?");
+$stmt->bind_param("s", $nota);
+$stmt->execute();
+$result = $stmt->get_result();
+$ai = $result->fetch_assoc();
+$stmt->close();
 
 ?>
 
@@ -130,14 +134,11 @@ if ($chmod >= 2 || $_SESSION['jabatan'] == 'admin') {
                   <select class="form-control select2" style="width: 100%;" name="pilih" id="pilih">
                       <option selected="selected">Pilih Pelanggan</option>
               <?php
-              error_reporting(E_ALL ^ (E_NOTICE | E_WARNING));
-         $sql=mysqli_query($conn,"select * from pelanggan");
-        while ($row=mysqli_fetch_assoc($sql)){
-          if ($barcode==$row['barcode'])
-          echo "<option value='".$row['kode']."' nama='".$row['nama']."' notelp='".$row['notelp']."' alamat='".$row['alamat']."' >".$row['kode']." | ".$row['nama']."</option>";
-          else
-          echo "<option value='".$row['kode']."' nama='".$row['nama']."' notelp='".$row['notelp']."' alamat='".$row['alamat']."' >".$row['kode']." | ".$row['nama']."</option>";
-        }
+              $sql_pelanggan = "SELECT * FROM pelanggan ORDER BY nama";
+              $result_pelanggan = mysqli_query($conn, $sql_pelanggan);
+              while ($row = mysqli_fetch_assoc($result_pelanggan)){
+                echo "<option value='" . $row['kode'] . "' nama='" . $row['nama'] . "' notelp='" . $row['notelp'] . "' alamat='" . $row['alamat'] . "' >" . $row['kode'] . " | " . $row['nama'] . "</option>";
+              }
       ?>
                     </select>
                 </div>
@@ -161,12 +162,21 @@ if ($chmod >= 2 || $_SESSION['jabatan'] == 'admin') {
 
                  <div class="form-group">
                   <label>Driver/Kurir</label>
-                  <input type="text" class="form-control" name="driver">
+                  <select class="form-control select2" style="width: 100%;" name="driver" id="driver">
+                      <option value="">Pilih Driver</option>
+                      <?php
+                      $sql_driver = "SELECT * FROM driver ORDER BY nama";
+                      $result_driver = mysqli_query($conn, $sql_driver);
+                      while($row_driver = mysqli_fetch_assoc($result_driver)){
+                          echo '<option value="' . $row_driver['nama'] . '" data-nohp="' . $row_driver['nohp'] . '">' . $row_driver['nama'] . '</option>';
+                      }
+                      ?>
+                  </select>
                 </div>
 
                  <div class="form-group">
                   <label>No.Hp Driver/Kurir</label>
-                  <input type="text" class="form-control" name="nohp">
+                  <input type="text" class="form-control" id="nohp_driver" name="nohp">
                 </div>
 
                  <div class="form-group">
@@ -207,8 +217,10 @@ if ($chmod >= 2 || $_SESSION['jabatan'] == 'admin') {
          <?php
            error_reporting(E_ALL ^ E_DEPRECATED);
 
-           $sql    = "select * from stok_keluar_daftar where nota='$nota' order by no";
-           $result = mysqli_query($conn, $sql);
+           $stmt = $conn->prepare("SELECT * FROM stok_keluar_daftar WHERE nota=? ORDER BY no");
+           $stmt->bind_param("s", $nota);
+           $stmt->execute();
+           $result = $stmt->get_result();
            $rpp    = 30;
            $reload = "$halaman"."?pagination=true";
            $page   = intval(isset($_GET["page"]) ? $_GET["page"] : 0);
@@ -284,47 +296,54 @@ if ($chmod >= 2 || $_SESSION['jabatan'] == 'admin') {
 
 
 <?php
+if(isset($_POST["surat"])){
+    if($_SERVER["REQUEST_METHOD"] == "POST"){
+        $nota = $_POST["nota"];
+        $nomor = $_POST["nomor"];
+        $tgl = $_POST["tgl"];
+        $pilih = $_POST["pilih"];
+        $tujuan = $_POST["tujuan"];
+        $alamat = $_POST["alamat"];
+        $telp = $_POST["notelp"];
+        $driver = $_POST["driver"];
+        $nohp = $_POST["nohp"];
+        $nopol = $_POST["nopol"];
+        $ket = $_POST["ket"];
+        $by = $_SESSION['nama'];
 
-    if(isset($_POST["surat"])){
-       if($_SERVER["REQUEST_METHOD"] == "POST"){
-               $nota = mysqli_real_escape_string($conn, $_POST["nota"]);
-                $nomor = mysqli_real_escape_string($conn, $_POST["nomor"]);
-                 $tgl = mysqli_real_escape_string($conn, $_POST["tgl"]);
-                 $pilih = mysqli_real_escape_string($conn, $_POST["pilih"]);
-                 $tujuan = mysqli_real_escape_string($conn, $_POST["tujuan"]);
-                  $alamat = mysqli_real_escape_string($conn, $_POST["alamat"]);
-                   $telp = mysqli_real_escape_string($conn, $_POST["notelp"]);
-                    $driver = mysqli_real_escape_string($conn, $_POST["driver"]);
-                     $nohp = mysqli_real_escape_string($conn, $_POST["nohp"]);
-                      $nopol = mysqli_real_escape_string($conn, $_POST["nopol"]);
-                      $ket = mysqli_real_escape_string($conn, $_POST["ket"]);
+        // Check for duplicates using prepared statement
+        $stmt_check = $conn->prepare("SELECT nota FROM surat WHERE nota=? OR nosurat=?");
+        $stmt_check->bind_param("ss", $nota, $nomor);
+        $stmt_check->execute();
+        $result_check = $stmt_check->get_result();
 
-                      $by=$_SESSION['nama'];
+        if($result_check->num_rows > 0){
+            echo "<script type='text/javascript'>  alert('Gagal, Telah ada surat jalan dengan nomor atau id yang sama!'); </script>";
+            echo "<script type='text/javascript'>window.location = 'surat_buat?q=" . htmlspecialchars($nota) . "';</script>";
+        } else {
+            // Insert into surat table using prepared statement
+            $stmt_insert = $conn->prepare("INSERT INTO surat VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '')");
+            $stmt_insert->bind_param("sssssssssss", $nota, $nomor, $tgl, $pilih, $tujuan, $telp, $alamat, $driver, $nohp, $nopol, $by);
 
+            if($stmt_insert->execute()){
+                // Update stok_keluar table using prepared statement
+                $stmt_update = $conn->prepare("UPDATE stok_keluar SET pelanggan=?, keterangan=? WHERE nota=?");
+                $stmt_update->bind_param("sss", $tujuan, $ket, $nota);
+                $stmt_update->execute();
+                $stmt_update->close();
 
-                         $sql="select * from surat where nota='$nota' or nosurat LIKE '%$nomor%'";
-        $result=mysqli_query($conn,$sql);
-              if(mysqli_num_rows($result)>0){
-
-                 echo "<script type='text/javascript'>  alert('Gagal, Telah ada surat jalan dengan nomor atau id yang sama!'); </script>";
-           echo "<script type='text/javascript'>window.location = 'surat_buat?q=$nota';</script>";
-              } else {
-
-        $sql2 = "insert into surat values( '$nota','$nomor','$tgl','$pilih','$tujuan','$telp','$alamat','$driver','$nohp','$nopol','$by','')";
-           if(mysqli_query($conn, $sql2)){
-
-            $a=mysqli_query($conn, "UPDATE stok_keluar SET pelanggan='$tujuan', keterangan='$ket' WHERE nota='$nota'");
-
-           echo "<script type='text/javascript'>  alert('Berhasil, Data Surat telah disimpan!'); </script>";
-           echo "<script type='text/javascript'>window.location = 'surat_kelola';</script>";
-         }else{
-           echo "<script type='text/javascript'>  alert('Gagal, Data Surat gagal disimpan!'); </script>";
-           echo "<script type='text/javascript'>window.location = 'surat_kelola';</script>";
-         }
-
-              }
-
-               } } ?>
+                echo "<script type='text/javascript'>  alert('Berhasil, Data Surat telah disimpan!'); </script>";
+                echo "<script type='text/javascript'>window.location = 'surat_kelola';</script>";
+            } else {
+                echo "<script type='text/javascript'>  alert('Gagal, Data Surat gagal disimpan!'); </script>";
+                echo "<script type='text/javascript'>window.location = 'surat_kelola';</script>";
+            }
+            $stmt_insert->close();
+        }
+        $stmt_check->close();
+    }
+}
+?>
                         <!-- ./col -->
                     </div>
 
@@ -369,6 +388,11 @@ $("#pilih").on("change", function(){
    $("#notelp").val(notelp);
     $("#alamat").val(alamat);
   
+});
+
+$("#driver").on("change", function(){
+  var nohp = $("#driver option:selected").data("nohp");
+  $("#nohp_driver").val(nohp);
 });
 </script>
 

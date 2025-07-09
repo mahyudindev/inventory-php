@@ -4,7 +4,7 @@ error_reporting(E_ALL ^ E_DEPRECATED);
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname="inventory";
+$dbname="lyam2686_inventory";
 
       $koneksi = mysqli_connect('localhost', 'root', '');
         $db = mysqli_select_db($koneksi ,$dbname);

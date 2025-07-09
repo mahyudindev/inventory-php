@@ -260,8 +260,8 @@ if ($chmod >= 1 || $_SESSION['jabatan'] == 'admin') {
         <td style="text-align:center;">0</td>
         <td style="text-align:center;"><?php  echo mysqli_real_escape_string($conn, $fill['barcode']); ?></td>
         <td style="text-align:center;">0</td>
-        <td style="text-align:center;"><?php if($fill['sisa']<$fill['stokmin']){echo "<span style='color:red'>" . ($fill['stokmin'] - $fill['sisa']) . "</span>";}?></td>
-        <td style="text-align:center;"><?php if($fill['sisa']>$fill['barcode']){echo "<span style='color:red'>".($fill['sisa']-$fill['baracode'])."</span>";}?></td>
+        <td style="text-align:center;"><?php if($fill['sisa'] < $fill['stokmin'] && $fill['stokmin'] > 0){echo "<span style='color:red'>" . ($fill['stokmin'] - $fill['sisa']) . "</span>";}?></td>
+        <td style="text-align:center;"><?php if($fill['sisa'] > $fill['barcode'] && $fill['barcode'] > 0){echo "<span style='color:red'>" . ($fill['sisa'] - $fill['barcode']) . "</span>";}?></td>
     </tr>
     
     <!-- Add more rows as needed -->

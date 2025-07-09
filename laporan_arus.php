@@ -231,39 +231,26 @@ $sql1 = "SELECT * FROM barang ORDER BY no desc ";
 $hasil1 = mysqli_query($conn,$sql1);
 
 $no_urut=0;
-while ($fill = mysqli_fetch_assoc($hasil1)){ ?>
+while ($fill = mysqli_fetch_assoc($hasil1)){
+  $kd=$fill['kode'];  
+  $a=mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(stok_masuk_daftar.jumlah) as masuk FROM stok_masuk INNER JOIN stok_masuk_daftar ON stok_masuk_daftar.nota=stok_masuk.nota WHERE stok_masuk_daftar.kode_barang='$kd' AND tgl BETWEEN '" . $dr . "' AND  '" . $sam . "' "));
+  $masuk = $a['masuk'] + 0;
 
+  $b=mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(stok_keluar_daftar.jumlah) as keluar FROM stok_keluar INNER JOIN stok_keluar_daftar ON stok_keluar_daftar.nota=stok_keluar.nota WHERE stok_keluar_daftar.kode_barang='$kd' AND tgl BETWEEN '" . $dr . "' AND  '" . $sam . "' "));
+  $keluar = $b['keluar'] + 0;
+
+  if($masuk > 0 || $keluar > 0) {
+?>
                 <tr>
                   <td><?php echo ++$no_urut;?></td>
                   <td><?php  echo mysqli_real_escape_string($conn, $fill['nama']); ?></td>
-                  <td>
-                  <?php  
-  $kd=$fill['kode'];  
-  $a=mysqli_fetch_assoc(mysqli_query($conn, "SELECT stok_masuk.tgl as tgl, stok_masuk_daftar.kode_barang as brg, SUM(stok_masuk_daftar.jumlah) as masuk FROM stok_masuk INNER JOIN stok_masuk_daftar ON stok_masuk_daftar.nota=stok_masuk.nota WHERE stok_masuk_daftar.kode_barang='$kd' AND tgl BETWEEN '" . $dr . "' AND  '" . $sam . "' "));
-
-echo $a['masuk']+0;
-
-
-?>
-                  </td>
-                  <td>
-                    
-<?php  
-  $kd=$fill['kode'];  
-  $b=mysqli_fetch_assoc(mysqli_query($conn, "SELECT stok_keluar.tgl as tgl, stok_keluar_daftar.kode_barang as brg, SUM(stok_keluar_daftar.jumlah) as keluar FROM stok_keluar INNER JOIN stok_keluar_daftar ON stok_keluar_daftar.nota=stok_keluar.nota WHERE stok_keluar_daftar.kode_barang='$kd' AND tgl BETWEEN '" . $dr . "' AND  '" . $sam . "' "));
-
-echo $b['keluar']+0;
-
-
-?>
-
-                  </td>
-                  
-                  
+                  <td><?php echo $masuk; ?></td>
+                  <td><?php echo $keluar; ?></td>
                 </tr>
-
-
-<?php } ?>
+<?php 
+    }
+} 
+?>
               </table>
             </div>
             <!-- /.box-body -->

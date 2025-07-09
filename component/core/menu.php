@@ -184,6 +184,9 @@ if($chmenu2 >= 1 || $_SESSION['jabatan'] == 'admin'){ ?>
                                  <li>
                                     <a href="add_customer"><i class="fa fa-circle-o"></i>Tambah pelanggan</a>
                                 </li>
+                                 <li>
+                                    <a href="driver"><i class="fa fa-circle-o"></i>Data Driver</a>
+                                </li>
                             </ul>
                         </li>
 <?php }else{}

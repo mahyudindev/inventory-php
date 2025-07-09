@@ -80,6 +80,13 @@ $sql1="SELECT url FROM backset";
         $hasil1=mysqli_query($conn,$sql1);
         $row=mysqli_fetch_assoc($hasil1);
         $url=$row['url'];
+
+        $sql_supplier=mysqli_query($conn, "SELECT * FROM supplier");
+        $supplier=mysqli_num_rows($sql_supplier);
+
+        $sql_driver=mysqli_query($conn, "SELECT * FROM driver");
+        $driver_count=mysqli_num_rows($sql_driver);
+
 if ($alert == 1 && $url =='#'){
 ?>
 
@@ -114,7 +121,7 @@ if ($alert == 1 && $url =='#'){
                          <!-- small box -->
                          <div class="small-box bg-green">
                              <div class="inner">
-                                 <h3><?php echo $datax2; ?></h3>
+                                 <h3><?php echo $supplier; ?></h3>
                                  <p>Supplier</p>
                              </div>
                              <div class="icon">
@@ -126,7 +133,21 @@ if ($alert == 1 && $url =='#'){
 
                      <div class="col-lg-3 col-xs-6">
                        <!-- small box -->
-                       <div class="small-box bg-yellow">
+                       <div class="small-box bg-blue">
+                           <div class="inner">
+                               <h3><?php echo $driver_count; ?></h3>
+                               <p>Driver</p>
+                           </div>
+                           <div class="icon">
+                               <i class="ion ion-android-car"></i>
+                           </div>
+                             <a href="driver" class="small-box-footer">Info lengkap <i class="fa fa-arrow-circle-right"></i></a>
+                       </div>
+                   </div>
+
+                   <div class="col-lg-3 col-xs-6">
+                     <!-- small box -->
+                     <div class="small-box bg-yellow">
                            <div class="inner">
                                <h3><?php echo $datax3; ?></h3>
                                <p>Barang</p>
